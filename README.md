@@ -14,8 +14,7 @@ in both accuracy and F1 scores over the testset data. Finally, a gradient weight
 Class Activation Map is applied to localize the highest probability observation for
 a given x-ray image input.
 
-Link to the Dataset: https://stanfordmlgroup.github.io/competitions/chexpert/
-Data includes about 200,000 images labeled for 14 observations.
+[Data](https://stanfordmlgroup.github.io/competitions/chexpert/) includes about 200,000 images labeled for 14 observations.
 
 A schematic view of the model is shown below.
 
