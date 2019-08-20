@@ -1,4 +1,4 @@
-# Chest x-ray diagnosis with deep-learning CNN over CheXpert dataset
+# Chest x-ray diagnosis with deep-learning CNN on the CheXpert dataset
 
 Multi-class models are trained for chest x-ray diagnosis of 14 observations using different deep learning architectures and a large dataset of chest x-ray images called CheXpert. We have used the DenseNet-121 architecture
 and used transfer learning to train the model, the training was carried out using kaggle kernels.
