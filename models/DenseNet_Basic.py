@@ -127,5 +127,5 @@ y_true = np.array(dtest[:,1:15],dtype=int)
 print(classification_report(y_true, y_pred,target_names=list(dtr.columns[1:15])))
 
 score, acc = model.evaluate_generator(test_generator, steps=STEP_SIZE_TEST)
-print('Test score:', score) # 44.067
-print('Test accuracy:', acc) # 80.654
+print('Test score:', score)
+print('Test accuracy:', acc)
