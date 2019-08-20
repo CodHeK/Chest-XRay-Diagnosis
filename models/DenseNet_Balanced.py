@@ -23,6 +23,7 @@ matplotlib.use("Agg")
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 
+
 dtrain=pd.read_csv("CheXpert-v1.0-small/train.csv")
 dtrain = dtrain.fillna(0)
 
@@ -44,13 +45,48 @@ dtrain.describe().transpose()
 dtrain = dtrain.replace(-1,1)
 dtrain.describe().transpose()
 
-# split data into train/valid/test, use 10% of total data for validation and testing
-dtrain = dtrain.sample(frac=1)
-dvalid_size = round(0.1*dtrain.shape[0])
+dtrain_upsample=[]
+dtrain_upsample_list=[]
+
+dtrain_upsample_list = [features_data[0],features_data[0],features_data[0],features_data[0],
+                       features_data[1],
+                       features_data[2],
+                       features_data[4],features_data[4],features_data[4],features_data[4],features_data[4],features_data[4],features_data[4],features_data[4],features_data[4],
+                       features_data[5],
+                       features_data[6],
+                       features_data[7],
+                       features_data[8],
+                       features_data[9],
+                       features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],features_data[11],
+                       features_data[12],features_data[12],features_data[12],features_data[12],features_data[12],features_data[12],features_data[12],features_data[12]]
+
+dtrain_upsample = pd.concat(dtrain_upsample_list)
+print(dtrain_upsample.shape)
+print(list(dtrain_upsample.columns[1:15]))
+
+features_sizeR=[]
+features_dataR =[]
+features_nameR=[]
+#print(list(dtrain.columns[1:15]))
+for featureR in list(dtrain_upsample.columns[1:15]):
+    data_featureR = dtrain_upsample.loc[dtrain_upsample[featureR] == 1]
+    features_sizeR.append(data_featureR.shape[0])
+    features_dataR.append(data_featureR)
+    features_nameR.append(featureR)
+
+objectsR = list(dtrain_upsample.columns[1:15])
+y_posR = np.arange(len(objectsR))
+performanceR = np.array(features_sizeR)/dtrain_upsample.shape[0]*100
+
+# split data into train/valid/test
+# shuffle data
+dtrain_upsample = dtrain_upsample.sample(frac=1)
+# split data
+dvalid_size = round(0.1*dtrain_upsample.shape[0])
 dtest_size = dvalid_size
-dtr = dtrain[0:dtrain.shape[0]-dvalid_size-dtest_size+1]
-dv = dtrain[dtrain.shape[0]-dvalid_size-dtest_size:dtrain.shape[0]-dvalid_size+1]
-dte = dtrain[dtrain.shape[0]-dvalid_size:dtrain.shape[0]+1]
+dtr = dtrain_upsample[0:dtrain_upsample.shape[0]-dvalid_size-dtest_size+1]
+dv = dtrain_upsample[dtrain_upsample.shape[0]-dvalid_size-dtest_size:dtrain_upsample.shape[0]-dvalid_size+1]
+dte = dtrain_upsample[dtrain_upsample.shape[0]-dvalid_size:dtrain_upsample.shape[0]+1]
 
 print(dtr.shape)
 print(dv.shape)
@@ -62,11 +98,11 @@ test_datagen=ImageDataGenerator(rescale=1./255.)
 valid_datagen=ImageDataGenerator(rescale=1./255.)
 
 target_size = (224,224)
-train_generator=train_datagen.flow_from_dataframe(dataframe=dtr, directory=None , x_col="Path", y_col=list(dtr.columns[1:15]), class_mode="other", target_size=target_size, batch_size=32)
-valid_generator=valid_datagen.flow_from_dataframe(dataframe=dv, directory=None , x_col="Path", y_col=list(dv.columns[1:15]), class_mode="other", target_size=target_size, batch_size=32)
-test_generator=test_datagen.flow_from_dataframe(dataframe=dte, directory=None , x_col="Path", y_col=list(dte.columns[1:15]), class_mode="other", target_size=target_size, shuffle = False, batch_size=1)
+train_generator=train_datagen.flow_from_dataframe(dataframe=dtr, directory=None , x_col="Path", y_col=list(dtr.columns[1:15]), class_mode="other", drop_duplicates = False, target_size=target_size, batch_size=32)
+valid_generator=valid_datagen.flow_from_dataframe(dataframe=dv, directory=None, x_col="Path", y_col=list(dv.columns[1:15]), class_mode="other", drop_duplicates = False, target_size=target_size, batch_size=32)
+test_generator=test_datagen.flow_from_dataframe(dataframe=dte, directory=None, x_col="Path", y_col=list(dte.columns[1:15]), class_mode="other", drop_duplicates = False, target_size=target_size, shuffle = False, batch_size=1)
 
-# model architecture design/selection
+### model architecture design/selection
 # create the base pre-trained model
 base_model = DenseNet121(include_top = False, weights='imagenet')
 
@@ -78,37 +114,39 @@ x = Dense(1024, activation='relu')(x)
 # and a logistic layer
 predictions = Dense(14, activation='sigmoid')(x)
 
-model = Model(inputs=base_model.input, outputs=predictions)
+
+# this is the model we will train
+model_F = Model(inputs=base_model.input, outputs=predictions)
 
 # first: train only the top layers (which were randomly initialized)
-# i.e. freeze all convolutional DenseNet layers
+# i.e. freeze all convolutional InceptionV3 layers
 for layer in base_model.layers:
-    layer.trainable = False
+   layer.trainable = False
 
 # compile the model (should be done *after* setting layers to non-trainable)
 
-# model training
+#model training
+
 adam = keras.optimizers.Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-model.compile(optimizer= adam, loss='binary_crossentropy', metrics=['accuracy'])
+model_F.compile(optimizer= adam, loss='binary_crossentropy', metrics=['accuracy'])
 
 # plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
-print(model.summary())
+print(model_F.summary())
 
-# fit model
+### fit model
 num_epochs = 3
 STEP_SIZE_TRAIN=train_generator.n//train_generator.batch_size
 STEP_SIZE_VALID=valid_generator.n//valid_generator.batch_size
 STEP_SIZE_TEST=test_generator.n//test_generator.batch_size
-model_H = model.fit_generator(generator=train_generator,
+model_H = model_F.fit_generator(generator=train_generator,
                     steps_per_epoch=STEP_SIZE_TRAIN,
                     validation_data=valid_generator,
                     validation_steps=STEP_SIZE_VALID,
                     epochs=num_epochs)
 # save model
-model.save("model_DenseNet_Basic.h5")
+model_F.save("model_DenseNet_Balanced.h5")
 
-# load my trained model
-model_F = load_model('model_DenseNet_Basic.h5')
+model_F = load_model('model_DenseNet_Balanced.h5')
 num_epochs = 3
 STEP_SIZE_TRAIN=train_generator.n//train_generator.batch_size
 STEP_SIZE_VALID=valid_generator.n//valid_generator.batch_size
@@ -116,7 +154,7 @@ STEP_SIZE_TEST=test_generator.n//test_generator.batch_size
 
 # prediction and performance assessment
 test_generator.reset()
-pred=model.predict_generator(test_generator, steps=STEP_SIZE_TEST)
+pred=model_F.predict_generator(test_generator, steps=STEP_SIZE_TEST)
 pred_bool = (pred >= 0.5)
 
 y_pred = np.array(pred_bool,dtype =int)
@@ -126,6 +164,6 @@ y_true = np.array(dtest[:,1:15],dtype=int)
 
 print(classification_report(y_true, y_pred,target_names=list(dtr.columns[1:15])))
 
-score, acc = model.evaluate_generator(test_generator, steps=STEP_SIZE_TEST)
+score, acc = model_F.evaluate_generator(test_generator, steps=STEP_SIZE_TEST)
 print('Test score:', score)
 print('Test accuracy:', acc)

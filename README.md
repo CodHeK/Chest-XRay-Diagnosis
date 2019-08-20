@@ -19,6 +19,10 @@ A schematic view of the model is shown below.
 
 ### Test Score and Accuracy:
 
-- DenseNet_Basic (unbalanced, without class activation map):
+- DenseNet_Basic (unbalanced, without up-sampling):
     Score: 0.44067
     Accuracy: 0.80654
+
+- DenseNet_Balanced (up-sampling applied);
+    Score: 0.186
+    Accuracy: 0.92
