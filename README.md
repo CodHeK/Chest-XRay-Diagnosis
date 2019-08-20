@@ -1,20 +1,17 @@
 # Chest x-ray diagnosis with deep-learning CNN over CheXpert dataset
 
-In this study, predictive multi-class models are trained for chest x-ray diagnosis
-of 14 observations using different deep learning architectures and a large dataset
-of chest x-ray images called CheXpert. First, three different deep learning models
-including VGG-16, ResNet-50, and DenseNet-121 are trained on an Amazon AWS
-EC2 GPU instance. For DenseNet-121, both transfer learning and full training
-are applied. While a good accuracy is achieved on testset data, the F1 scores on a
-few observations were low. This was an indication of model robustness issue for a
-few class predictions. Further analysis of the data indicates an unbalance between
-available data for those observations with low F1 scores. An up-sampling approach
-is applied to balance the training data. This results in a significant improvement
-in both accuracy and F1 scores over the testset data. Finally, a gradient weighted
-Class Activation Map is applied to localize the highest probability observation for
+Multi-class models are trained for chest x-ray diagnosis of 14 observations using different deep learning architectures and a large dataset of chest x-ray images called CheXpert. We have used the DenseNet-121 architecture
+and used transfer learning to train the model, the training was carried out using kaggle kernels.
+
+While a good accuracy is achieved on testset data, the F1 scores on a few observations were low. This was an indication of model robustness issue for a few class predictions. Further analysis of the data indicates an unbalance between available data for those observations with low F1 scores.
+
+Instead of using the complete high-resolution dataset (~430G) we use an up-sampling approach to balance the training data. This results in a significant improvement in both accuracy and F1 scores over the testset data. Finally, a gradient weighted Class Activation Map is applied to localize the highest probability observation for
 a given x-ray image input.
 
-[Data](https://stanfordmlgroup.github.io/competitions/chexpert/) includes about 200,000 images labeled for 14 observations.
+[Data](https://stanfordmlgroup.github.io/competitions/chexpert/) :
+CheXpert is a large public dataset for chest radiograph interpretation, consisting of 224,316 chest radiographs of 65,240 patients. (Down sampled dataset size: ~11G)
+
+![Classes](/images/classes.png)
 
 A schematic view of the model is shown below.
 
