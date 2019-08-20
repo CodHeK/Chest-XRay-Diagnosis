@@ -13,7 +13,7 @@ CheXpert is a large public dataset for chest radiograph interpretation, consisti
 
 ![Classes](/images/classes.png)
 
-Source: ([link](https://stanfordmlgroup.github.io/competitions/chexpert/))
+Image source: ([link](https://stanfordmlgroup.github.io/competitions/chexpert/))
 
 ### Test Score and Accuracy:
 
