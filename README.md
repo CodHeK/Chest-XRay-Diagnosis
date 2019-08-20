@@ -13,9 +13,7 @@ CheXpert is a large public dataset for chest radiograph interpretation, consisti
 
 ![Classes](/images/classes.png)
 
-A schematic view of the model is shown below.
-
-![Model](/images/schematic.png)
+Source: ([link](https://stanfordmlgroup.github.io/competitions/chexpert/))
 
 ### Test Score and Accuracy:
 
@@ -25,4 +23,4 @@ A schematic view of the model is shown below.
 
 - DenseNet_Balanced (up-sampling applied);
     Score: 0.186
-    Accuracy: 0.92
+    Accuracy: 0.88
