@@ -23,10 +23,10 @@ matplotlib.use("Agg")
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 
-dtrain=pd.read_csv("CheXpert-v1.0-small/train.csv")
+dtrain=pd.read_csv("../input/CheXpert_v1_small/train.csv")
 dtrain = dtrain.fillna(0)
 
-dnew=pd.read_csv("CheXpert-v1.0-small/valid.csv")
+dnew=pd.read_csv("../input/CheXpert_v1_small/valid.csv")
 dnew = dnew.fillna(0)
 
 #add dnew to dtrain to re-split since valid data in data set is very small
