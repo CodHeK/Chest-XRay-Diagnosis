@@ -43,7 +43,20 @@ dtrain.describe().transpose()
 
 # dealing with uncertanty (-1) values
 dtrain = dtrain.replace(-1,1)
-dtrain.describe().transpose()
+
+features_size=[]
+features_data =[]
+features_name=[]
+for feature in list(dtrain.columns[1:15]):
+    data_feature = dtrain.loc[dtrain[feature] == 1]
+    features_size.append(data_feature.shape[0])
+    features_data.append(data_feature)
+    features_name.append(feature)
+    
+print(dtrain.shape)
+print(list(dtrain.columns[1:15]))
+print(features_size)
+print(np.array(features_size)/dtrain.shape[0]*100)
 
 # Up sampling
 dtrain_upsample=[]
