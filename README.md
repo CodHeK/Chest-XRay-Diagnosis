@@ -22,5 +22,5 @@ Image source: ([link](https://stanfordmlgroup.github.io/competitions/chexpert/))
     Accuracy: 0.80654
 
 - DenseNet_Balanced (up-sampling applied);
-    Score: 0.186
+    Score: 0.706
     Accuracy: 0.88
